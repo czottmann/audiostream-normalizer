@@ -1,0 +1,18 @@
+# audiostream-normalizer
+
+This script automates the audio normalization of any given video file.
+
+Pass in a file name (a glob pattern will work as well), the script will first
+get the maximum volume using ffmpeg, then change the it to be 0.0 dB.  If an
+optional gain is specified, it'll be applied.
+
+The new video file is then saved with a new file extension (prefixed with '.vol'
+by default, e.g. 'video.mkv' will become 'video.vol.mkv'), and the original file
+is moved to another folder, so only the processed file will remain in the source
+folder.
+
+
+### Prerequisites
+
+- Ruby 2.2.0
+- ffmpeg 2.7.2
