@@ -12,6 +12,89 @@ is moved to another folder, so only the processed file will remain in the source
 folder.
 
 
+### Usage
+
+    Usage: normalizer.rb [options]
+        -f, --file FILE       File(s) to normalize (glob allowed!)
+        -e, --ext PREFIX      File extension prefix for processed file
+                              (default: .vol, e.g. video.mkv ➔ video.vol.mkv)
+        -m, --move FOLDER     Folder to move original files to after processing
+        -g, --gain GAIN       Gain in dB to apply on top of automatic normalizing
+                              (optional)
+        -h, --help            Prints this help
+
+
+### Examples
+
+Single file, normalize and set additional gain to 2.0 dB.
+
+    ➔ ./normalizer.rb --file "~/Desktop/example.avi" \
+        --move ~/Desktop/old_files \
+        --gain 2
+
+    [1/1] Working /Users/carlo/Desktop/example.avi…
+    - Analyzing…
+      - max volume: -1.0 dB
+    - Processing…
+      - new volume: 3.0 dB
+      - new filename: /Users/carlo/Desktop/example.vol.avi
+      - new volume set
+      - original file was moved to /Users/carlo/Desktop/old_files
+
+Batch process files, normalize and set file extension prefix to `-normalized`.
+
+    ➔ ./normalizer.rb --file "~/Desktop/S01E*.mp4" \
+        --move ~/Desktop/old_files \
+        --ext -normalized
+
+    [1/8] Working /Users/carlo/Desktop/S01E01.mp4…
+    - Analyzing…
+      - max volume: -1.0 dB
+    - Processing…
+      - new volume: 3.0 dB
+      - new filename: /Users/carlo/Desktop/S01E01-normalized.mp4
+      - new volume set
+    - Nothing to do, skipping!ers/carlo/Desktop/old_files
+
+    [2/8] Working /Users/carlo/Desktop/S01E02.mp4…
+    - Analyzing…
+      - max volume: -2.1 dB
+    - Processing…
+      - new volume: 2.1 dB
+      - new filename: /Users/carlo/Desktop/S01E02-normalized.mp4
+      - new volume set
+      - original file was moved to /Users/carlo/Desktop/old_files
+
+    [3/8] Working /Users/carlo/Desktop/S01E03.mp4…
+    - Analyzing…
+      - max volume: 0.0 dB
+    - Nothing to do, skipping!
+
+    …
+
+
+#### Note about glob patterns
+
+Some shells will run glob patterns that are passed in a `--file` parameter
+before the script is even called.   If you want to circumvent that, wrap the
+file name/pattern in quotes. For example, take the following examples:
+
+    # Good
+    ./normalizer.rb --file "~/Desktop/S01E*.mp4" --move ~/Desktop/old_files
+
+    # Bad
+    ./normalizer.rb --file ~/Desktop/S01E*.mp4 --move ~/Desktop/old_files
+
+In the first call, the script will actually receive the glob pattern because it
+was passed in as a string.  In the second call, it might not; `fish` for example
+will execute the glob pattern and internally substitute the
+`~/Desktop/S01E*.mp4` portion of the call with the list of files it found for
+that pattern, namely `~/Desktop/S01E01.mp4`, `~/Desktop/S01E02.mp4` etc.
+Since `--file` only expects one file name/pattern,
+`~/Desktop/S01E01.mp4` will be discarded, i.e. `normalizer.rb` will only process
+that one single file.
+
+
 ### Prerequisites
 
 - Ruby 2.2.0
