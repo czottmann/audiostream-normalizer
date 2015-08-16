@@ -24,7 +24,7 @@ OptionParser.new do |opts|
   end
 
   opts.on("-gGAIN", "--gain GAIN", "Gain in dB to apply on top of automatic normalizing (optional)") do |o|
-    options[:gain] = o.to_f
+    options[:gain] = o
   end
 
   opts.on("-h", "--help", "Prints this help") do
@@ -33,7 +33,7 @@ This script automates the audio normalization of any given video file.
 
 Pass in a file name (a glob pattern will work as well), the script will first
 get the maximum volume using ffmpeg, then change the it to be 0.0 dB.  If an
-optional gain is specified, it'll be applied.
+optional gain is specified, it will be applied.
 
 The new video file is then saved with a new file extension (prefixed with '.vol'
 by default, e.g. 'video.mkv' will become 'video.vol.mkv'), and the original file
@@ -66,6 +66,7 @@ exit_with_error("Target folder doesn't exist") unless Dir.exist?(options[:target
 
 files = Dir.glob(File.expand_path(options[:files])).sort
 num_files = files.size
+gain = options[:gain].to_f
 
 files.each_with_index do |filename, idx|
   current_index = idx + 1
@@ -83,14 +84,14 @@ files.each_with_index do |filename, idx|
 
   puts "  - max volume: #{max_volume} dB"
 
-  if max_volume == 0 && options[:gain] == 0
+  if max_volume == 0 && gain == 0
     puts "- Nothing to do, skipping!"
     next
   end
 
   puts "- Processing…"
 
-  new_volume = max_volume * -1 + options[:gain]
+  new_volume = max_volume * -1 + gain
   puts "  - new volume: #{new_volume} dB"
 
   new_filename = filename.gsub(/(\.[^\.]+)$/, options[:ext_prefix] + '\1')
@@ -100,6 +101,6 @@ files.each_with_index do |filename, idx|
 
   puts "  - new volume set"
   FileUtils.move(filename, options[:target_folder])
-  puts " - original file was moved to #{options[:target_folder]}"
+  puts "  - original file was moved to #{options[:target_folder]}"
   puts
 end
