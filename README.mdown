@@ -6,8 +6,8 @@ Pass in a file name (a glob pattern will work as well), the script will first
 get the maximum volume using ffmpeg, then change the it to be 0.0 dB.  If an
 optional gain is specified, it'll be applied.
 
-The new video file is then saved with a new file extension (prefixed with '.vol'
-by default, e.g. 'video.mkv' will become 'video.vol.mkv'), and the original file
+The new video file is then saved with a new file extension (prefixed with `.vol`
+by default, e.g. `video.mkv` will become `video.vol.mkv`), and the original file
 is moved to another folder, so only the processed file will remain in the source
 folder.
 
@@ -16,3 +16,32 @@ folder.
 
 - Ruby 2.2.0
 - ffmpeg 2.7.2
+
+
+### Author
+
+Carlo Zottmann, carlo@zottmann.org, http://carlo.zottmann.org
+
+
+### Warning
+
+Things might break, files might be lost, etc.  Use at your own risk.
+
+No, seriously.
+
+
+### License
+
+    DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+            Version 2, December 2004
+
+    Copyright (C) 2004 Sam Hocevar
+    14 rue de Plaisance, 75014 Paris, France
+    Everyone is permitted to copy and distribute verbatim or modified
+    copies of this license document, and changing it is allowed as long
+    as the name is changed.
+
+    DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+    0. You just DO WHAT THE FUCK YOU WANT TO.
