@@ -2,6 +2,13 @@
 
 This script automates the audio normalization of any given video file.
 
+Sometimes video files are too loud or too silent, analyzing these files with
+`ffmpeg` will show their `max_volume` being too high or to low.  In a perfect
+world, all files would have a `max_volume` of 0.0 dB, but mankind is not ready
+for that yet.  Another `ffmpeg` call can set the audio volume without actually
+reëncoding the audio stream.  `normalizer.rb` does these steps automatically,
+and a bit more.
+
 Pass in a file name (a glob pattern will work as well), the script will first
 get the maximum volume using ffmpeg, then change the it to be 0.0 dB.  If an
 optional gain is specified, it'll be applied.
@@ -10,6 +17,9 @@ The new video file is then saved with a new file extension (prefixed with `.vol`
 by default, e.g. `video.mkv` will become `video.vol.mkv`), and the original file
 is moved to another folder, so only the processed file will remain in the source
 folder.
+
+The script is very, very simple and rather hacky.  I wrote it in about 2h on a
+lazy Sunday afternoon.  It scratches _my_ itch, and that's all I wanted.
 
 
 ### Usage
@@ -70,7 +80,7 @@ Batch process files, normalize and set file extension prefix to `-normalized`.
       - max volume: 0.0 dB
     - Nothing to do, skipping!
 
-    …
+    etc.
 
 
 #### Note about glob patterns
@@ -86,13 +96,15 @@ file name/pattern in quotes. For example, take the following examples:
     ./normalizer.rb --file ~/Desktop/S01E*.mp4 --move ~/Desktop/old_files
 
 In the first call, the script will actually receive the glob pattern because it
-was passed in as a string.  In the second call, it might not; `fish` for example
-will execute the glob pattern and internally substitute the
-`~/Desktop/S01E*.mp4` portion of the call with the list of files it found for
-that pattern, namely `~/Desktop/S01E01.mp4`, `~/Desktop/S01E02.mp4` etc.
-Since `--file` only expects one file name/pattern,
-`~/Desktop/S01E01.mp4` will be discarded, i.e. `normalizer.rb` will only process
-that one single file.
+was passed in as a string.  It'll use the pattern to find a list of files, then
+process them, as you would expect.
+
+In the second call, it might not; the `fish` shell for example will execute the
+glob pattern and internally substitute the `~/Desktop/S01E*.mp4` portion of the
+script call with the list of files it found  for that pattern, namely
+`~/Desktop/S01E01.mp4`, `~/Desktop/S01E02.mp4` etc. Since `--file` only expects
+one file name/pattern, everything but `~/Desktop/S01E01.mp4` will be discarded,
+i.e. `normalizer.rb` will only process that one single file.
 
 
 ### Prerequisites
